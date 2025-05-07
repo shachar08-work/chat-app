@@ -51,6 +51,7 @@ const Auth = () => {
       if (response.status === 201) {
         setUserInfo(response.data.user);
         navigate("/profile");
+        toast.error("Please setup profile to continue!")
       }
       console.log({ response });
     } 
@@ -61,6 +62,7 @@ const Auth = () => {
       const response = await apiClient.post(LOGIN_ROUTE, { email, password }, { withCredentials: true });
       if (response.data.user.id) {
         setUserInfo(response.data.user);
+        console.log(response.data.user.profileSetup)
         if(response.data.user.profileSetup) {
           navigate("/chat");
         }
@@ -73,50 +75,65 @@ const Auth = () => {
   };
 
   return (
-    <div className="h-[100vh] w-[100vw] flex items-center justify-center">
-      <div className="h-[80vh] w-[80vw] bg-white border-2 border-white text-opacity-90 shadow-2xl rounded-3xl grid">
+    <div className="min-h-screen w-full flex items-center justify-center p-4">
+      <div className="w-full max-w-5xl bg-white border-2 border-white text-opacity-90 shadow-2xl rounded-3xl p-6 md:p-10 grid">
         <div className="flex flex-col gap-10 items-center justify-center">
-          <div className="flex items-center justify-center flex-col">
-            <div className="flex items-center justify-center">
-              <h1 className="text-5xl font-bold md:text-6xl">Welcome</h1>
-              <img src={Victory} alt="Victory Emoji" className="h-[100px]" />
+          <div className="flex flex-col items-center justify-center gap-2 text-center">
+            <div className="flex items-center justify-center gap-3">
+              <h1 className="text-3xl md:text-5xl font-bold">Welcome</h1>
+              <img src={Victory} alt="Victory Emoji" className="h-12 md:h-24" />
             </div>
-            <p className="font-medium text-center">
+            <p className="font-medium text-sm md:text-base">
               Fill in the details to get started!
             </p>
           </div>
-          <div className="flex items-center justify-center w-full bg">
-            <Tabs defaultValue="login" className="w-3/4">
-              <TabsList className="bg-transparent rounded-none w-full">
-                <TabsTrigger value="login" className="state-active data-[state=active]:bg-transparent text-black text-opacity-90 border-b-2 rounded-none w-full data-[state=active]:text-black data-[state=active]:font-semibold data-[state=active]:border-b-purple-500 p-3 transition-all duration-300">Login</TabsTrigger>
-                <TabsTrigger value="signup" className="data-[state=active]:bg-transparent text-black text-opacity-90 border-b-2 rounded-none w-full data-[state=active]:text-black data-[state=active]:font-semibold data-[state=active]:border-b-purple-500 p-3 transition-all duration-300">Sign Up</TabsTrigger>
+  
+          <div className="w-full max-w-xl">
+            <Tabs defaultValue="login" className="w-full">
+              <TabsList className="bg-transparent rounded-none w-full flex">
+                <TabsTrigger
+                  value="login"
+                  className="w-1/2 text-black text-opacity-90 border-b-2 border-transparent p-3 transition-all duration-300 data-[state=active]:text-black data-[state=active]:font-semibold data-[state=active]:border-b-purple-500"
+                >
+                  Login
+                </TabsTrigger>
+                <TabsTrigger
+                  value="signup"
+                  className="w-1/2 text-black text-opacity-90 border-b-2 border-transparent p-3 transition-all duration-300 data-[state=active]:text-black data-[state=active]:font-semibold data-[state=active]:border-b-purple-500"
+                >
+                  Sign Up
+                </TabsTrigger>
               </TabsList>
-              <TabsContent value="login" className="mt-8">
-                <div className="flex flex-col items-center justify-center gap-5 h-[300px]">
+  
+              <TabsContent value="login" className="mt-6">
+                <div className="flex flex-col gap-5">
                   <Input
                     placeholder="Email"
                     type="email"
+                    name="loginEmail"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="rounded-full p-4 w-full"
+                    className="rounded-full p-4"
                   />
                   <Input
                     placeholder="Password"
                     type="password"
+                    name="loginPassword"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="rounded-full p-4 w-full"
+                    className="rounded-full p-4"
                   />
                   <Input
                     placeholder="Confirm Password"
                     type="password"
+                    name="loginConfirmPassword"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="rounded-full p-4 w-full invisible"
+                    className="rounded-full p-4 invisible"
                   />
-                  <div className="mt-6">
+                  <div className="mt-6 w-full flex justify-center">
                     <Button
-                      className="rounded-full px-6 py-3 bg-purple-700 text-white font-semibold"
+                      className="rounded-full w-1/4 px-6 py-3 bg-purple-700 text-white font-semibold"
                       onClick={handleLogin}
                     >
                       Login
@@ -124,32 +141,36 @@ const Auth = () => {
                   </div>
                 </div>
               </TabsContent>
-              <TabsContent value="signup" className="mt-8">
-                <div className="flex flex-col items-center justify-center gap-5 h-[300px]">
+  
+              <TabsContent value="signup" className="mt-6">
+                <div className="flex flex-col gap-5">
                   <Input
                     placeholder="Email"
                     type="email"
+                    name="signupEmail"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="rounded-full p-4 w-full"
+                    className="rounded-full p-4"
                   />
                   <Input
                     placeholder="Password"
                     type="password"
+                    name="signupPassword"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="rounded-full p-4 w-full"
+                    className="rounded-full p-4"
                   />
                   <Input
                     placeholder="Confirm Password"
                     type="password"
+                    name="signupConfirmPassword"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="rounded-full p-4 w-full"
+                    className="rounded-full p-4"
                   />
-                  <div className="mt-6">
+                  <div className="mt-6 w-full flex justify-center">
                     <Button
-                      className="rounded-full px-6 py-3 bg-purple-700 text-white font-semibold"
+                      className="rounded-full w-1/4 px-6 py-3 bg-purple-700 text-white font-semibold"
                       onClick={handleSignUp}
                     >
                       Sign Up
